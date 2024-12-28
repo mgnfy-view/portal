@@ -1,66 +1,146 @@
-## Foundry
+<!-- PROJECT SHIELDS -->
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
 
-Foundry consists of:
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <!-- <a href="https://github.com/mgnfy-view/portal">
+    <img src="assets/icon.svg" alt="Logo" width="80" height="80">
+  </a> -->
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+  <h3 align="center">Portal</h3>
 
-## Documentation
+  <p align="center">
+    An omni-chain stablecoin protocol built with layer zero 
+    <br />
+    <a href="https://github.com/mgnfy-view/portal/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
+    ·
+    <a href="https://github.com/mgnfy-view/portal/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+  </p>
+</div>
 
-https://book.getfoundry.sh/
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
 
-## Usage
+<!-- ABOUT THE PROJECT -->
 
-### Build
+## About The Project
+
+Project description goes here.
+
+### Built With
+
+- Solidity
+- Foundry
+
+<!-- GETTING STARTED -->
+
+## Getting Started
+
+### Prerequisites
+
+Make sure you have npm, git, rust, and foundry installed and configured on your system.
+
+### Installation
+
+Clone the repo,
 
 ```shell
-$ forge build
+git clone https://github.com/mgnfy-view/portal.git
 ```
 
-### Test
+cd into the repo, and install the necessary dependencies,
 
 ```shell
-$ forge test
+cd portal
+npm install
+forge build
 ```
 
-### Format
+Run tests by executing,
 
 ```shell
-$ forge fmt
+forge test
 ```
 
-### Gas Snapshots
+That's it, you are good to go now!
 
-```shell
-$ forge snapshot
-```
+<!-- ROADMAP -->
 
-### Anvil
+## Roadmap
 
-```shell
-$ anvil
-```
+-   [ ] Smart contract development
+-   [ ] Unit tests
+-   [ ] Write a good README.md
 
-### Deploy
+See the [open issues](https://github.com/mgnfy-view/portal/issues) for a full list of proposed features (and known issues).
 
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
+<!-- CONTRIBUTING -->
 
-### Cast
+## Contributing
 
-```shell
-$ cast <subcommand>
-```
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-### Help
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
 
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+<!-- LICENSE -->
+
+## License
+
+Distributed under the MIT License. See `LICENSE.txt` for more information.
+
+<!-- CONTACT -->
+
+## Reach Out
+
+Here's a gateway to all my socials, don't forget to hit me up!
+
+[![Linktree](https://img.shields.io/badge/linktree-1de9b6?style=for-the-badge&logo=linktree&logoColor=white)][linktree-url]
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
+[contributors-shield]: https://img.shields.io/github/contributors/mgnfy-view/portal.svg?style=for-the-badge
+[contributors-url]: https://github.com/mgnfy-view/portal/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/mgnfy-view/portal.svg?style=for-the-badge
+[forks-url]: https://github.com/mgnfy-view/portal/network/members
+[stars-shield]: https://img.shields.io/github/stars/mgnfy-view/portal.svg?style=for-the-badge
+[stars-url]: https://github.com/mgnfy-view/portal/stargazers
+[issues-shield]: https://img.shields.io/github/issues/mgnfy-view/portal.svg?style=for-the-badge
+[issues-url]: https://github.com/mgnfy-view/portal/issues
+[license-shield]: https://img.shields.io/github/license/mgnfy-view/portal.svg?style=for-the-badge
+[license-url]: https://github.com/mgnfy-view/portal/blob/master/LICENSE.txt
+[linktree-url]: https://linktr.ee/mgnfy.view
