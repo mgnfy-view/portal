@@ -7,7 +7,7 @@ interface IAssetRegistry {
         uint16 liquidationRewardInBPs;
     }
 
-    event AssetConfigSet(address asset, AssetConfig assetConfig);
+    event AssetConfigSet(address indexed asset, AssetConfig indexed assetConfig);
 
     error AssetRegistry__AddressZero();
     error AssetRegistry__InvalidAssetConfig(address asset, AssetConfig assetConfig);
