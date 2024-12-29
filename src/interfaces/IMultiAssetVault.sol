@@ -9,6 +9,8 @@ interface IMultiAssetVault {
 
     event AmountDeposited(address by, address indexed asset, uint256 indexed amount, address indexed onBehalfOf);
     event AmountWithdrawn(address indexed by, address indexed asset, uint256 indexed amount, address to);
+    event PortalMinted(address indexed by, address indexed asset, uint256 indexed amount, address to);
+    event PortalBurned(address indexed by, address indexed asset, uint256 indexed amount);
 
     error MultiAssetVault__AddressZero();
     error MultiAssetVault__AssetNotWhitelisted(address asset);

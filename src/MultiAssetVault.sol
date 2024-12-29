@@ -9,22 +9,23 @@ import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.s
 import { IAssetRegistry } from "./interfaces/IAssetRegistry.sol";
 import { IMultiAssetVault } from "./interfaces/IMultiAssetVault.sol";
 
-import { IPortal } from "./interfaces/IPortal.sol";
 import { IPythOracle } from "./interfaces/IPythOracle.sol";
+import { ISourcePortal } from "./interfaces/ISourcePortal.sol";
 
 contract MultiAssetVault is IMultiAssetVault {
     using SafeERC20 for IERC20;
 
     IAssetRegistry private immutable i_assetRegistry;
     IPythOracle private immutable i_pythOracle;
-    IPortal private immutable i_portal;
+    ISourcePortal private immutable i_sourcePortal;
     mapping(address user => mapping(address asset => Position position)) private s_positions;
 
-    constructor(address _assetRegistry, address _pythOracle) {
+    constructor(address _assetRegistry, address _pythOracle, address _sourcePortal) {
         if (_assetRegistry == address(0) || _pythOracle == address(0)) revert MultiAssetVault__AddressZero();
 
         i_assetRegistry = IAssetRegistry(_assetRegistry);
         i_pythOracle = IPythOracle(_pythOracle);
+        i_sourcePortal = ISourcePortal(_sourcePortal);
     }
 
     function depositCollateral(address _asset, uint256 _amount, address _for) external {
@@ -55,9 +56,33 @@ contract MultiAssetVault is IMultiAssetVault {
         emit AmountWithdrawn(msg.sender, _asset, _amount, _to);
     }
 
-    function mint() external { }
+    function mint(address _asset, uint256 _amount, address _to) external {
+        _revertIfAssetNotWhitelisted(_asset);
+        if (_amount == 0) revert MultiAssetVault__AmountZero();
+        if (_to == address(0)) revert MultiAssetVault__AddressZero();
 
-    function burn() external { }
+        Position memory position = s_positions[msg.sender][_asset];
+        position.amountMinted += _amount;
+        s_positions[msg.sender][_asset] = position;
+
+        if (!_isPositionHealthy(_asset, position)) revert MultiAssetVault__MinimumCollateralisationRatioBreached();
+        i_sourcePortal.mint(_to, _amount);
+
+        emit PortalMinted(msg.sender, _asset, _amount, _to);
+    }
+
+    function burn(address _asset, uint256 _amount) external {
+        _revertIfAssetNotWhitelisted(_asset);
+        if (_amount == 0) revert MultiAssetVault__AmountZero();
+
+        Position memory position = s_positions[msg.sender][_asset];
+        position.amountMinted -= _amount;
+        s_positions[msg.sender][_asset] = position;
+
+        i_sourcePortal.burn(msg.sender, _amount);
+
+        emit PortalBurned(msg.sender, _asset, _amount);
+    }
 
     function _revertIfAssetNotWhitelisted(address _asset) internal view {
         if (!i_assetRegistry.isAssetWhitelisted(_asset)) revert MultiAssetVault__AssetNotWhitelisted(_asset);
@@ -75,7 +100,7 @@ contract MultiAssetVault is IMultiAssetVault {
     function _getCollateralisationRatio(address _asset, Position memory _position) internal view returns (uint256) {
         if (_position.amountMinted == 0) return type(uint256).max;
         return _getDepositedAmountValueInUsd(_asset, _position.amountDeposited)
-            * 10 ** IERC20Metadata(address(i_portal)).decimals() / _position.amountMinted;
+            * 10 ** IERC20Metadata(address(i_sourcePortal)).decimals() / _position.amountMinted;
     }
 
     function _getDepositedAmountValueInUsd(address _asset, uint256 _depositedAmount) internal view returns (uint256) {

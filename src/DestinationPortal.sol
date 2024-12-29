@@ -4,16 +4,15 @@ pragma solidity 0.8.24;
 import { OFT } from "@layerzerolabs/oft-evm/contracts/OFT.sol";
 import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 
-contract MyOFT is OFT {
+contract DestinationPortal is OFT {
     uint8 private constant DECIMALS = 6;
 
     constructor(
-        string memory _name,
-        string memory _symbol,
-        address _lzEndpoint
+        address _lzEndpoint,
+        address _globalOwner
     )
-        OFT(_name, _symbol, _lzEndpoint, _delegate)
-        Ownable(msg.sender)
+        OFT("Portal", "PORTAL", _lzEndpoint, _globalOwner)
+        Ownable(_globalOwner)
     { }
 
     function decimals() public pure override returns (uint8) {
