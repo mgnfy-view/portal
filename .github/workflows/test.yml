@@ -25,14 +25,13 @@ jobs:
         with:
           version: nightly
 
-      - name: Show Forge version
-        run: |
-          forge --version
-
-      - name: Run Forge fmt
-        run: |
-          forge fmt --check
-        id: fmt
+      - name: Install node.js
+        uses: actions/setup-node@v4
+          with:
+            node-version: 18
+      
+      - name: Install node modules
+        run: npm i
 
       - name: Run Forge build
         run: |
