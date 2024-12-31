@@ -16,7 +16,7 @@
   <h3 align="center">Portal</h3>
 
   <p align="center">
-    An omni-chain stablecoin protocol built with layer zero 
+    An omni-chain, multi-collateral stablecoin protocol built with layer zero 
     <br />
     <a href="https://github.com/mgnfy-view/portal/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
@@ -52,7 +52,7 @@
 
 ## About The Project
 
-Project description goes here.
+Portal is an omni-chain, multi-collateral stablecoin protocol built with layer zero.
 
 ### Built With
 
@@ -95,7 +95,7 @@ That's it, you are good to go now!
 
 ## Roadmap
 
--   [ ] Smart contract development
+-   [x] Smart contract development
 -   [ ] Unit tests
 -   [ ] Write a good README.md
 
