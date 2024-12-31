@@ -27,7 +27,7 @@ contract SourcePortal is OFT, GlobalOwnerChecker, ISourcePortal {
         Ownable(DEAD_ADDRESS)
         GlobalOwnerChecker(_globalOwnable)
     {
-        if (_lzEndpoint == address(0) || _globalOwnable == address(0)) {
+        if (_lzEndpoint == address(0)) {
             revert SourcePortal__AddressZero();
         }
     }
