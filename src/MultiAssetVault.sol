@@ -33,12 +33,20 @@ contract MultiAssetVault is IMultiAssetVault {
         _;
     }
 
-    constructor(address _assetRegistry, address _pythOracle, address _sourcePortal) {
+    constructor(
+        address _assetRegistry,
+        address _pythOracle,
+        address _sourcePortal,
+        address _liquidationPenaltyRecipientSetter,
+        address _liquidationPenaltyRecipient
+    ) {
         if (_assetRegistry == address(0) || _pythOracle == address(0)) revert MultiAssetVault__AddressZero();
 
         i_assetRegistry = IAssetRegistry(_assetRegistry);
         i_pythOracle = IPythOracle(_pythOracle);
         i_sourcePortal = ISourcePortal(_sourcePortal);
+        s_liquidationPenaltyRecipientSetter = _liquidationPenaltyRecipientSetter;
+        s_liquidationPenaltyRecipient = _liquidationPenaltyRecipient;
     }
 
     function setLiquidationPenaltyRecipient(

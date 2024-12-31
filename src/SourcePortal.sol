@@ -10,28 +10,34 @@ import { GlobalOwnerChecker } from "./utils/GlobalOwnerChecker.sol";
 
 contract SourcePortal is OFT, GlobalOwnerChecker, ISourcePortal {
     uint8 private constant DECIMALS = 6;
+    address private constant DEAD_ADDRESS = address(1);
 
-    address private immutable i_multiAssetVault;
+    address private s_multiAssetVault;
 
     modifier onlyMultiAssetVault() {
-        if (msg.sender != i_multiAssetVault) revert SourcePortal__NotMultiAssetVault(msg.sender, i_multiAssetVault);
+        if (msg.sender != s_multiAssetVault) revert SourcePortal__NotMultiAssetVault(msg.sender, s_multiAssetVault);
         _;
     }
 
     constructor(
         address _lzEndpoint,
-        address _globalOwnable,
-        address _multiAssetVault
+        address _globalOwnable
     )
-        OFT("Portal", "PORTAL", _lzEndpoint, address(1))
-        Ownable(address(1))
+        OFT("Portal", "PORTAL", _lzEndpoint, DEAD_ADDRESS)
+        Ownable(DEAD_ADDRESS)
         GlobalOwnerChecker(_globalOwnable)
     {
-        if (_lzEndpoint == address(0) || _globalOwnable == address(0) || _multiAssetVault == address(0)) {
+        if (_lzEndpoint == address(0) || _globalOwnable == address(0)) {
             revert SourcePortal__AddressZero();
         }
+    }
 
-        i_multiAssetVault = _multiAssetVault;
+    function initializeMultiAssetVaultAddress(address _multiAssetVault) external onlyOwner {
+        if (s_multiAssetVault != address(0)) revert SourcePortal__MultiAssetVaultAlreadySet(s_multiAssetVault);
+
+        s_multiAssetVault = _multiAssetVault;
+
+        emit MultiAssetVaultSet(_multiAssetVault);
     }
 
     function mint(address _to, uint256 _amount) external onlyMultiAssetVault {

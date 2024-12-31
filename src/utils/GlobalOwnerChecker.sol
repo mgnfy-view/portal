@@ -23,4 +23,8 @@ abstract contract GlobalOwnerChecker is IGlobalOwnerChecker {
     function getGlobalOwnable() external view returns (address) {
         return address(i_globalOwnable);
     }
+
+    function getGlobalOwner() external view returns (address) {
+        return i_globalOwnable.owner();
+    }
 }

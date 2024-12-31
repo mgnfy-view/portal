@@ -6,4 +6,6 @@ interface IGlobalOwnerChecker {
     error GlobalOwnerChecker__AddressZero();
 
     function getGlobalOwnable() external returns (address);
+
+    function getGlobalOwner() external view returns (address);
 }
