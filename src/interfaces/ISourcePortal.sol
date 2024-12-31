@@ -3,6 +3,7 @@ pragma solidity 0.8.24;
 
 interface ISourcePortal {
     error SourcePortal__NotMultiAssetVault(address caller, address multiAssetVault);
+    error SourcePortal__AddressZero();
 
     function mint(address _to, uint256 _amount) external;
 

@@ -37,11 +37,11 @@ contract PythOracle is GlobalOwnerChecker, IPythOracle {
     }
 
     function getPriceInUsd(address _asset) external view returns (uint256) {
-        OracleConfig memory OracleConfig = s_assetToOracleConfig[_asset];
-        if (OracleConfig.priceFeedId == 0) revert PythOracle__OracleNotSet(_asset);
+        OracleConfig memory oracleConfig = s_assetToOracleConfig[_asset];
+        if (oracleConfig.priceFeedId == 0) revert PythOracle__OracleNotSet(_asset);
 
         PythStructs.Price memory priceStruct =
-            i_pyth.getPriceNoOlderThan(OracleConfig.priceFeedId, OracleConfig.stalenessThreshold);
+            i_pyth.getPriceNoOlderThan(oracleConfig.priceFeedId, oracleConfig.stalenessThreshold);
         uint256 priceInTargetDecimals = PythUtils.convertToUint(priceStruct.price, priceStruct.expo, TARGET_DECIMALS);
         uint256 confidenceInTargetDecimals =
             PythUtils.convertToUint(int64(priceStruct.conf), priceStruct.expo, TARGET_DECIMALS);
@@ -58,7 +58,7 @@ contract PythOracle is GlobalOwnerChecker, IPythOracle {
         return TARGET_DECIMALS;
     }
 
-    function getMaxAllowedConfidenceAsAPercentageOfPriceInBPS() external pure returns (uint16) {
+    function getMaxAllowedConfidenceAsAPercentageOfPriceInBPs() external pure returns (uint16) {
         return MAX_ALLOWED_CONFIDENCE_AS_AS_PERCENTAGE_OF_PRICE_IN_BPS;
     }
 

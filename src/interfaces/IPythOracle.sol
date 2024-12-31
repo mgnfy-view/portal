@@ -7,7 +7,7 @@ interface IPythOracle {
         uint256 stalenessThreshold;
     }
 
-    event OracleConfigSet(address asset, OracleConfig assetOracleConfig);
+    event OracleConfigSet(address indexed asset, OracleConfig indexed assetOracleConfig);
 
     error PythOracle__NotAssetRegistry(address caller, address assetRegistry);
     error PythOracle__AddressZero();
@@ -21,7 +21,7 @@ interface IPythOracle {
 
     function getTargetDecimals() external pure returns (uint8);
 
-    function getMaxAllowedConfidenceAsAPercentageOfPriceInBPS() external pure returns (uint16);
+    function getMaxAllowedConfidenceAsAPercentageOfPriceInBPs() external pure returns (uint16);
 
     function getPyth() external view returns (address);
 
