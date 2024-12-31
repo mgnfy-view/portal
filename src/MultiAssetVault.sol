@@ -40,7 +40,10 @@ contract MultiAssetVault is IMultiAssetVault {
         address _liquidationPenaltyRecipientSetter,
         address _liquidationPenaltyRecipient
     ) {
-        if (_assetRegistry == address(0) || _pythOracle == address(0)) revert MultiAssetVault__AddressZero();
+        if (
+            _assetRegistry == address(0) || _pythOracle == address(0) || _sourcePortal == address(0)
+                || _liquidationPenaltyRecipientSetter == address(0)
+        ) revert MultiAssetVault__AddressZero();
 
         i_assetRegistry = IAssetRegistry(_assetRegistry);
         i_pythOracle = IPythOracle(_pythOracle);
@@ -49,14 +52,25 @@ contract MultiAssetVault is IMultiAssetVault {
         s_liquidationPenaltyRecipient = _liquidationPenaltyRecipient;
     }
 
+    function setLiquidationPenaltyRecipientSetter(
+        address _newLiquidationPenaltyRecipientSetter
+    )
+        external
+        onlyLiquidationPenaltyRecipientSetter
+    {
+        if (_newLiquidationPenaltyRecipientSetter == address(0)) revert MultiAssetVault__AddressZero();
+
+        s_liquidationPenaltyRecipientSetter = _newLiquidationPenaltyRecipientSetter;
+
+        emit NewLiquidationPenaltyRecipientSetterSet(_newLiquidationPenaltyRecipientSetter);
+    }
+
     function setLiquidationPenaltyRecipient(
         address _newLiquidationPenaltyRecipient
     )
         external
         onlyLiquidationPenaltyRecipientSetter
     {
-        if (_newLiquidationPenaltyRecipient == address(0)) revert MultiAssetVault__AddressZero();
-
         s_liquidationPenaltyRecipient = _newLiquidationPenaltyRecipient;
 
         emit NewLiquidationPenaltyRecipientSet(_newLiquidationPenaltyRecipient);
@@ -268,8 +282,12 @@ contract MultiAssetVault is IMultiAssetVault {
         position.amountMinted = 0;
         position.amountDeposited -= equivalentAmountInAsset + liquidationReward;
         s_positions[_user][_asset] = position;
-        IERC20(_asset).safeTransfer(_to, equivalentAmountInAsset + liquidationReward - liquidationRewardProtocolCut);
-        s_collectedLiquidationPenalties[_asset] += liquidationRewardProtocolCut;
+        if (s_liquidationPenaltyRecipient != address(0)) {
+            s_collectedLiquidationPenalties[_asset] += liquidationRewardProtocolCut;
+            IERC20(_asset).safeTransfer(_to, equivalentAmountInAsset + liquidationReward - liquidationRewardProtocolCut);
+        } else {
+            IERC20(_asset).safeTransfer(_to, equivalentAmountInAsset + liquidationReward);
+        }
 
         emit Liquidated(msg.sender, _asset, _user, _to);
     }

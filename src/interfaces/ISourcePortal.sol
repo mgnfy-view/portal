@@ -5,7 +5,6 @@ interface ISourcePortal {
     event MultiAssetVaultSet(address indexed multiAssetVaultSet);
 
     error SourcePortal__NotMultiAssetVault(address caller, address multiAssetVault);
-    error SourcePortal__AddressZero();
     error SourcePortal__MultiAssetVaultAlreadySet(address multiAssetVault);
 
     function initializeMultiAssetVaultAddress(address _multiAssetVault) external;

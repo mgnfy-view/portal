@@ -26,11 +26,7 @@ contract SourcePortal is OFT, GlobalOwnerChecker, ISourcePortal {
         OFT("Portal", "PORTAL", _lzEndpoint, DEAD_ADDRESS)
         Ownable(DEAD_ADDRESS)
         GlobalOwnerChecker(_globalOwnable)
-    {
-        if (_lzEndpoint == address(0)) {
-            revert SourcePortal__AddressZero();
-        }
-    }
+    { }
 
     function initializeMultiAssetVaultAddress(address _multiAssetVault) external onlyOwner {
         if (s_multiAssetVault != address(0)) revert SourcePortal__MultiAssetVaultAlreadySet(s_multiAssetVault);

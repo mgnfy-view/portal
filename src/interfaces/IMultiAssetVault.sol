@@ -7,6 +7,7 @@ interface IMultiAssetVault {
         uint256 amountMinted;
     }
 
+    event NewLiquidationPenaltyRecipientSetterSet(address indexed newLiquidationPenaltyRecipientSetter);
     event NewLiquidationPenaltyRecipientSet(address indexed newLiquidationPenaltyRecipient);
     event LiquidationPenaltyCollected(address indexed asset, uint256 indexed amount, address indexed recipient);
     event AmountDeposited(address by, address indexed asset, uint256 indexed amount, address indexed onBehalfOf);
@@ -24,6 +25,8 @@ interface IMultiAssetVault {
     error MultiAssetVault__AmountZero();
     error MultiAssetVault__MinimumCollateralisationRatioBreached();
     error MultiAssetVault__CannotLiquidateHealthyPosition(address user, address asset, Position position);
+
+    function setLiquidationPenaltyRecipientSetter(address _newLiquidationPenaltyRecipientSetter) external;
 
     function setLiquidationPenaltyRecipient(address _newLiquidationPenaltyRecipient) external;
 
