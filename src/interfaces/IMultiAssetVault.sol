@@ -25,6 +25,7 @@ interface IMultiAssetVault {
     error MultiAssetVault__AmountZero();
     error MultiAssetVault__MinimumCollateralisationRatioBreached();
     error MultiAssetVault__CannotLiquidateHealthyPosition(address user, address asset, Position position);
+    error MultiAssetVault__NotEnoughPortalMinted(uint256 amountMinted, uint256 expectedMinimumAmountMinted);
 
     function setLiquidationPenaltyRecipientSetter(address _newLiquidationPenaltyRecipientSetter) external;
 

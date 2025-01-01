@@ -17,6 +17,7 @@ contract MultiAssetVault is IMultiAssetVault {
     using SafeERC20 for IERC20;
 
     uint16 private constant LIQUIDATION_REWARD_PROTOCOL_CUT_IN_BPS = 5_000;
+    uint256 private constant MINIMUM_PORTAL_AMOUNT_IN_POSITION = 50e6;
 
     IAssetRegistry private immutable i_assetRegistry;
     IPythOracle private immutable i_pythOracle;
@@ -214,6 +215,7 @@ contract MultiAssetVault is IMultiAssetVault {
         s_positions[msg.sender][_asset] = position;
 
         if (!_isPositionHealthy(_asset, position)) revert MultiAssetVault__MinimumCollateralisationRatioBreached();
+        _revertIfPositionDoesNotHaveMinimumPortalAmountMinted(position);
         i_sourcePortal.mint(_to, _amount);
 
         emit PortalMinted(msg.sender, _asset, _amount, _to);
@@ -225,8 +227,9 @@ contract MultiAssetVault is IMultiAssetVault {
 
         Position memory position = s_positions[msg.sender][_asset];
         position.amountMinted -= _amount;
-        s_positions[msg.sender][_asset] = position;
+        _revertIfPositionDoesNotHaveMinimumPortalAmountMinted(position);
 
+        s_positions[msg.sender][_asset] = position;
         i_sourcePortal.burn(msg.sender, _amount);
 
         emit PortalBurned(msg.sender, _asset, _amount);
@@ -303,6 +306,12 @@ contract MultiAssetVault is IMultiAssetVault {
             return false;
         }
         return true;
+    }
+
+    function _revertIfPositionDoesNotHaveMinimumPortalAmountMinted(Position memory _position) internal pure {
+        if (_position.amountMinted > 0 && _position.amountMinted < MINIMUM_PORTAL_AMOUNT_IN_POSITION) {
+            revert MultiAssetVault__NotEnoughPortalMinted(_position.amountMinted, MINIMUM_PORTAL_AMOUNT_IN_POSITION);
+        }
     }
 
     function _getCollateralisationRatio(address _asset, Position memory _position) internal view returns (uint256) {
