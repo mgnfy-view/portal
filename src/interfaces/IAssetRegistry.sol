@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 
+/// @title Interface for the `AssetRegistry` contract. Holds structs, events, errors,
+/// and function signatures.
 interface IAssetRegistry {
     struct AssetConfig {
         uint256 minimumCollateralisationRatio;
