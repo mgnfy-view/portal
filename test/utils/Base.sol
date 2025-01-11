@@ -6,6 +6,7 @@ import { MockPyth } from "@pythnetwork/pyth-sdk-solidity/MockPyth.sol";
 import { console } from "forge-std/console.sol";
 
 import { IAssetRegistry } from "../../src/interfaces/IAssetRegistry.sol";
+import { IPythOracle } from "../../src/interfaces/IPythOracle.sol";
 
 import { AssetRegistry } from "../../src/AssetRegistry.sol";
 import { DestinationPortal } from "../../src/DestinationPortal.sol";
@@ -86,6 +87,7 @@ abstract contract Base is TestHelperOz5 {
             address(weth),
             IAssetRegistry.AssetConfig(WETH_MINIMUM_COLLATERALISATION_RATIO, WETH_LIQUIDATION_REWARD_IN_BPS)
         );
+        pythOracle.setOracleConfig(address(weth), IPythOracle.OracleConfig(WETHUSD_PRICE_FEED_ID, VALID_TIME_PERIOD));
         vm.stopPrank();
 
         _updatePriceFeed();
