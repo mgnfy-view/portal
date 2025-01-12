@@ -97,6 +97,8 @@ interface IMultiAssetVault {
 
     function getLiquidationRewardProtocolCutInBPs() external pure returns (uint16);
 
+    function getMinimumPortalAmountInPosition() external pure returns (uint256);
+
     function getAssetRegistry() external view returns (address);
 
     function getPythOracle() external view returns (address);

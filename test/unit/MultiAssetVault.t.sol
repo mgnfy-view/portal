@@ -230,4 +230,101 @@ contract MultiAssetVaultTest is Base {
         multiAssetVault.withdrawCollateral(address(weth), amount, user1);
         vm.stopPrank();
     }
+
+    function test_mintingPortalFailsIfAssetIsNotWhitelisted() external {
+        uint256 portalAmount = 100e6;
+
+        vm.startPrank(user1);
+        vm.expectRevert(
+            abi.encodeWithSelector(IMultiAssetVault.MultiAssetVault__AssetNotWhitelisted.selector, address(0))
+        );
+        multiAssetVault.mintPortal(address(0), portalAmount, user1);
+        vm.stopPrank();
+    }
+
+    function test_mintingPortalFailsIfMintAmountIsZero() external {
+        vm.startPrank(user1);
+        vm.expectRevert(IMultiAssetVault.MultiAssetVault__AmountZero.selector);
+        multiAssetVault.mintPortal(address(weth), 0, user1);
+        vm.stopPrank();
+    }
+
+    function test_mintingPortalFailsIfToIsAddressZero() external {
+        uint256 portalAmount = 100e6;
+
+        vm.startPrank(user1);
+        vm.expectRevert(IMultiAssetVault.MultiAssetVault__AddressZero.selector);
+        multiAssetVault.mintPortal(address(weth), portalAmount, address(0));
+        vm.stopPrank();
+    }
+
+    function test_mintingPortalFailsIfPositionIsUnHealthy() external {
+        uint256 amount = 1e18;
+        uint256 portalAmount = 2001e6;
+
+        _dealNativeTokens(user1, amount);
+
+        vm.startPrank(user1);
+        weth.deposit{ value: amount }();
+        vm.stopPrank();
+        _depositCollateral(user1, address(weth), amount, user1);
+
+        vm.startPrank(user1);
+        vm.expectRevert(IMultiAssetVault.MultiAssetVault__MinimumCollateralisationRatioBreached.selector);
+        multiAssetVault.mintPortal(address(weth), portalAmount, user1);
+        vm.stopPrank();
+    }
+
+    function test_mintingPortalFailsIfMintedAmountIsLessThanMinimumMintAmount() external {
+        uint256 amount = 1e18;
+        uint256 portalAmount = 1e6;
+
+        _dealNativeTokens(user1, amount);
+
+        vm.startPrank(user1);
+        weth.deposit{ value: amount }();
+        vm.stopPrank();
+        _depositCollateral(user1, address(weth), amount, user1);
+
+        vm.startPrank(user1);
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                IMultiAssetVault.MultiAssetVault__NotEnoughPortalMinted.selector,
+                portalAmount,
+                multiAssetVault.getMinimumPortalAmountInPosition()
+            )
+        );
+        multiAssetVault.mintPortal(address(weth), portalAmount, user1);
+        vm.stopPrank();
+    }
+
+    function test_mintingPortalSucceeds() external {
+        uint256 amount = 1e18;
+        uint256 portalAmount = 200e6;
+
+        _mintPortal(amount, portalAmount, user1);
+
+        IMultiAssetVault.Position memory position = multiAssetVault.getPosition(user1, address(weth));
+
+        assertEq(position.amountDeposited, amount);
+        assertEq(position.amountMinted, portalAmount);
+    }
+
+    function test_mintingPortalEmitsEvent() external {
+        uint256 amount = 1e18;
+        uint256 portalAmount = 200e6;
+
+        _dealNativeTokens(user1, amount);
+
+        vm.startPrank(user1);
+        weth.deposit{ value: amount }();
+        vm.stopPrank();
+        _depositCollateral(user1, address(weth), amount, user1);
+
+        vm.startPrank(user1);
+        vm.expectEmit(true, true, true, true);
+        emit IMultiAssetVault.PortalMinted(user1, address(weth), portalAmount, user1);
+        multiAssetVault.mintPortal(address(weth), portalAmount, user1);
+        vm.stopPrank();
+    }
 }

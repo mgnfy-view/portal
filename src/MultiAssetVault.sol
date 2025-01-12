@@ -473,6 +473,12 @@ contract MultiAssetVault is IMultiAssetVault {
         return LIQUIDATION_REWARD_PROTOCOL_CUT_IN_BPS;
     }
 
+    /// @notice Gets the minimum portal amount that should be in each position (or 0).
+    /// @return The minimum portal amount required in each position.
+    function getMinimumPortalAmountInPosition() external pure returns (uint256) {
+        return MINIMUM_PORTAL_AMOUNT_IN_POSITION;
+    }
+
     /// @notice Gets the address of the asset registry.
     /// @return The address of the asset registry.
     function getAssetRegistry() external view returns (address) {

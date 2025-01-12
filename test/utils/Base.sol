@@ -114,4 +114,19 @@ abstract contract Base is TestHelperOz5 {
         multiAssetVault.depositCollateral(_asset, _amount, _for);
         vm.stopPrank();
     }
+
+    function _mintPortal(uint256 _depositAmount, uint256 _mintAmount, address _to) internal {
+        _dealNativeTokens(_to, _depositAmount);
+
+        vm.startPrank(_to);
+        weth.deposit{ value: _depositAmount }();
+        weth.approve(address(multiAssetVault), _depositAmount);
+        vm.stopPrank();
+
+        _depositCollateral(_to, address(weth), _depositAmount, _to);
+
+        vm.startPrank(_to);
+        multiAssetVault.mintPortal(address(weth), _mintAmount, _to);
+        vm.stopPrank();
+    }
 }
