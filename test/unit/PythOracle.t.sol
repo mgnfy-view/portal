@@ -2,7 +2,6 @@
 pragma solidity 0.8.24;
 
 import { PythErrors } from "@pythnetwork/pyth-sdk-solidity/PythErrors.sol";
-import { console } from "forge-std/console.sol";
 
 import { IGlobalOwnerChecker } from "../../src/interfaces/IGlobalOwnerChecker.sol";
 import { IPythOracle } from "../../src/interfaces/IPythOracle.sol";

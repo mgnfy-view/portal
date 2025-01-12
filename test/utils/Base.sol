@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.24;
 
+import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 import { TestHelperOz5 } from "@layerzerolabs/test-devtools-evm-foundry/contracts/TestHelperOz5.sol";
 import { MockPyth } from "@pythnetwork/pyth-sdk-solidity/MockPyth.sol";
 import { console } from "forge-std/console.sol";
@@ -100,5 +102,16 @@ abstract contract Base is TestHelperOz5 {
         );
 
         pyth.updatePriceFeeds(updateData);
+    }
+
+    function _dealNativeTokens(address _to, uint256 _amount) internal {
+        vm.deal(_to, _amount);
+    }
+
+    function _depositCollateral(address _user, address _asset, uint256 _amount, address _for) internal {
+        IERC20(_asset).approve(address(multiAssetVault), _amount);
+        vm.startPrank(_user);
+        multiAssetVault.depositCollateral(_asset, _amount, _for);
+        vm.stopPrank();
     }
 }
